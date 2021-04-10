@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO DO LIST</title>
+</head>
+<body>
+    <i class="zmdi zmdi-menu">MENU</i>
+    <br>
+    <input id="new-item" type="text">
+    <button id="add-Btn">Add</button>
+    <ul id="todo-list">
+    </ul id="todo-list">
+    <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+    <script type="text/javascript">
+        var storageKey = 'todoList';
+        var dataString = localStorage.getItem(storageKey);
+        var htmlList = document.getElementById('todo-list');
+        var addBtn = document.getElementById('add-Btn');
+        addBtn.addEventListener('click',addItem);
+        htmlList.addEventListener('click',onListChecked);
+        
+        var todoList;
+        if(dataString){
+            todoList = JSON.parse(dataString);
+        }else{
+            todoList = [];
+        }
+        // var url = 'http://localhost:3000/todos'; // link api server
+        // axios.get(url).then(function(res){
+        //     var items = res.data;
+        //     render(items);
+        // })
+        function onListChecked(event){
+            var button = event.target;
+            var i = parseInt(button.dataset.id);
+            todoList.splice(i,1);
+            render();
+            localStorage.setItem(storageKey,JSON.stringify(todoList));
+        }    
+
+        function addItem(){
+            var input = document.getElementById('new-item');
+            var newItem = input.value;
+            todoList.push(newItem);
+            render();
+            input.value = '';
+            localStorage.setItem(storageKey,JSON.stringify(todoList));
+        }
+
+        function render(){
+        var content =todoList.map(function(item,i){
+            return '<li>' + item + ' <button data-id="'+ i +'">Delete</button></li>';
+        });
+        htmlList.innerHTML = content.join('');
+        }
+        render();
+    </script>
+</body>
+</html>
